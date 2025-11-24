@@ -24,8 +24,8 @@
 
     // Load both datasets
     Promise.all([
-      fetch('./datasets/countries.geojson').then(res => res.json()),
-      fetch('./datasets/trips.json').then(res => res.json())
+      fetch('datasets/countries.geojson').then(res => res.json()),
+      fetch('datasets/trips.json').then(res => res.json())
     ]).then(([countries, trips]) => {
 
       // Create a lookup for fast access
