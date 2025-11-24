@@ -1,7 +1,9 @@
 <head>
-  <style> body { margin: 0; } </style>
-
-  <script src="//cdn.jsdelivr.net/npm/globe.gl"></script>
+  <style>
+    body { margin: 0; }
+    #globeViz { width: 100vw; height: 100vh; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
 </head>
 
 <body>
@@ -9,38 +11,46 @@
 
   <script>
     const world = new Globe(document.getElementById('globeViz'))
-      .globeImageUrl('//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg')
+      .globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-day.jpg')
       .pointOfView({ altitude: 4 }, 5000)
-      .polygonCapColor(feat => 'rgba(200, 0, 0, 0.6)')
-      .polygonSideColor(() => 'rgba(0, 100, 0, 0.05)')
-      .polygonLabel(({ properties: d }) => `
-          <b>${d.ADMIN} (${d.ISO_A2})</b> <br />
-          Population: <i>${Math.round(+d.POP_EST / 1e4) / 1e2}M</i>
-        `);
+      .polygonSideColor(() => 'rgba(0, 100, 0, 0.05)'); // keep side color light
 
     // Auto-rotate
     world.controls().autoRotate = true;
     world.controls().autoRotateSpeed = 1.8;
 
-    // Load both datasets
+    // Load datasets
     Promise.all([
       fetch('datasets/countries.geojson').then(res => res.json()),
       fetch('datasets/trips.json').then(res => res.json())
     ]).then(([countries, trips]) => {
 
-      // Create a lookup for fast access
-      const tripsMap = Object.fromEntries(trips.map(t => [t.name, t.visits.length]));
+      // Create a lookup for trips info
+      const tripsMap = Object.fromEntries(trips.map(t => [t.name, t]));
 
-      // Filter polygons to only include countries in trips.json
+      // Filter polygons to countries in trips
       const filtered = countries.features.filter(d => tripsMap[d.properties.ISO_A2]);
 
       world.polygonsData(filtered);
 
-      // Set polygon altitude based on number of visits
+      // Set polygon color and label based on solo & trips array
+      world
+        .polygonCapColor(feat => {
+          const t = tripsMap[feat.properties.ISO_A2];
+          return t?.solo ? 'rgba(0, 200, 0, 0.6)' : 'rgba(200, 0, 0, 0.6)';
+        })
+        .polygonLabel(feat => {
+          const t = tripsMap[feat.properties.ISO_A2];
+          const tripsStr = t ? t.visits.join(', ') : '';
+          return `<b>${feat.properties.ADMIN} (${feat.properties.ISO_A2})</b><br/>
+                  Trips: ${tripsStr}`;
+        });
+
+      // Set polygon altitude based on number of trips
       setTimeout(() => {
         world
           .polygonsTransitionDuration(4000)
-          .polygonAltitude((feat => tripsMap[feat.properties.ISO_A2] || 0)*0.05);
+          .polygonAltitude(feat => (tripsMap[feat.properties.ISO_A2]?.visits.length || 0) * 0.05);
       }, 3000);
 
     });

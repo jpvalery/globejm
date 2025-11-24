@@ -1,6 +1,7 @@
 [
 	{
 		"name": "CA",
+		"solo": false,
 		"visits": [
 			2021,
 			2019,
