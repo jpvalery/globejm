@@ -40,7 +40,7 @@
       setTimeout(() => {
         world
           .polygonsTransitionDuration(4000)
-          .polygonAltitude(feat => tripsMap[feat.properties.ISO_A2] || 0);
+          .polygonAltitude((feat => tripsMap[feat.properties.ISO_A2] || 0)*0.05);
       }, 3000);
 
     });
