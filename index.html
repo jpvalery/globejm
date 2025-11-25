@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <style>
     body {
       margin: 0;
@@ -24,6 +24,20 @@
     #credit a {
       color: white;
       text-decoration: underline;
+    }
+
+    #toggleRotate {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 12px;
+      padding: 6px 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-family: sans-serif;
+      border: 1px solid white;
+      border-radius: 4px;
+      cursor: pointer;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
@@ -75,11 +89,24 @@
       setTimeout(() => {
         world
           .polygonsTransitionDuration(4000)
-          .polygonAltitude(feat => (tripsMap[feat.properties.ISO_A2]?.visits.length || 0) * 0.05);
+          .polygonAltitude(feat => (tripsMap[feat.properties.ISO_A2]?.visits.length || 0) * 0.005);
       }, 3000);
 
     });
+
+    // Create toggle button functionality
+    const toggleBtn = document.getElementById('toggleRotate');
+    let isRotating = true;
+
+    toggleBtn.addEventListener('click', () => {
+      isRotating = !isRotating;
+      world.controls().autoRotate = isRotating;
+      toggleBtn.textContent = isRotating
+        ? "Suspendre rotation"
+        : "Reprendre rotation";
+    });
   </script>
+  <button id="toggleRotate">Suspendre rotation</button>
   <div id="credit">
     Créé avec <a href="https://globe.gl" target="_blank">Globe.gl</a>.
     Mis à jour le 25/11/2025
