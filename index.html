@@ -1,4 +1,6 @@
+<html>
 <head>
+<meta charset="UTF-8">
   <style>
     body {
       margin: 0;
@@ -35,6 +37,7 @@
     const world = new Globe(document.getElementById('globeViz'))
       .globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-day.jpg')
       .pointOfView({ altitude: 4 }, 5000)
+      .polygonStrokeColor(() => '#ffffff')
       .polygonSideColor(() => 'rgba(0, 100, 0, 0.05)'); // keep side color light
 
     // Auto-rotate
@@ -82,3 +85,4 @@
     Mis à jour le 25/11/2025
   </div>
 </body>
+</html>
