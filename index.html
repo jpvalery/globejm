@@ -47,6 +47,13 @@
   <div id="globeViz">
   </div>
 
+  <button id="toggleRotate" onclick="toggleRotation()">Suspendre rotation</button>
+
+  <div id="credit">
+    Créé avec <a href="https://globe.gl" target="_blank">Globe.gl</a>.
+    Mis à jour le 25/11/2025
+  </div>
+
   <script>
     const world = new Globe(document.getElementById('globeViz'))
       .globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-day.jpg')
@@ -95,21 +102,15 @@
     });
 
     // Create toggle button functionality
-    const toggleBtn = document.getElementById('toggleRotate');
     let isRotating = true;
 
-    toggleBtn.addEventListener('click', () => {
+    function toggleRotation() {
       isRotating = !isRotating;
       world.controls().autoRotate = isRotating;
-      toggleBtn.textContent = isRotating
+      document.getElementById('toggleRotate').textContent = isRotating
         ? "Suspendre rotation"
         : "Reprendre rotation";
-    });
+    }
   </script>
-  <button id="toggleRotate">Suspendre rotation</button>
-  <div id="credit">
-    Créé avec <a href="https://globe.gl" target="_blank">Globe.gl</a>.
-    Mis à jour le 25/11/2025
-  </div>
 </body>
 </html>
